@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TaskStoreRequest;
+use App\Http\Requests\TaskUpdateRequest;
+use App\Http\Resources\TaskCollection;
+use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
@@ -16,7 +20,7 @@ class TaskController extends Controller
     {
         //
 
-        return Task::paginate();
+        return new TaskCollection(Task::paginate());
     }
 
     /**
@@ -25,9 +29,11 @@ class TaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TaskStoreRequest $request)
     {
         //
+
+        return Task::create($request->validated());
     }
 
     /**
@@ -39,6 +45,8 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         //
+
+        return new TaskResource($task);
     }
 
     /**
@@ -48,9 +56,12 @@ class TaskController extends Controller
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Task $task)
+    public function update(TaskUpdateRequest $request, Task $task)
     {
         //
+        $task->update($request->validated());
+
+        return $task;
     }
 
     /**
@@ -62,5 +73,10 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         //
+
+        $task->delete();
+
+
+        return response()->json(null, 204);
     }
 }

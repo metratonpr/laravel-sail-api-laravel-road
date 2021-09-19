@@ -25,24 +25,50 @@ class TaskTest extends TestCase
         //Assert
         $response
             ->assertOk()
-            ->assertJsonPath('total', $total);
+            ->assertJsonPath('meta.total', $total);
     }
     public function test_task_store()
     {
         //Arrange
+        $task = Task::factory()->make();
         //Act
+        $response = $this->json('POST',route('tasks.store'),$task->toArray());
         //Assert
+        $response->assertCreated();
+        $this->assertDatabaseHas('tasks', $task->getAttributes());
     }
     public function test_task_update()
     {
         //Arrange
+        $task = Task::factory()->create();
+        $taskFake = Task::factory()->make();
         //Act
+        $response = $this->json('PUT',route('tasks.update',$task),$taskFake->toArray());
         //Assert
+        $response->assertOk();
+        $this->assertDatabaseHas('tasks', $taskFake->getAttributes());
+    }
+    public function test_task_show()
+    {
+        //Arrange
+        $task = Task::factory()->create();        
+        //Act
+        $response = $this->json('GET',route('tasks.show',$task)); 
+        //Assert
+        $response
+        ->assertOk()
+        ->assertJsonPath('data.name', $task->name);       
+        ;
+        
     }
     public function test_task_destroy()
     {
         //Arrange
+        $task = Task::factory()->create();        
         //Act
+        $response = $this->json('DELETE',route('tasks.destroy',$task));
         //Assert
+        $response->assertNoContent();
+        $this->assertDatabaseMissing('tasks', $task->getAttributes());
     }
 }
