@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class TaskTest extends TestCase
@@ -19,6 +21,7 @@ class TaskTest extends TestCase
     public function test_task_index()
     {
         //Arrange
+        Sanctum::actingAs(User::factory()->create());
         Task::factory($total = $this->faker->numberBetween(15, 50))->create();
         //Act
         $response = $this->json('GET', route('tasks.index'));
@@ -30,6 +33,7 @@ class TaskTest extends TestCase
     public function test_task_store()
     {
         //Arrange
+        Sanctum::actingAs(User::factory()->create());
         $task = Task::factory()->make();
         //Act
         $response = $this->json('POST',route('tasks.store'),$task->toArray());
@@ -40,6 +44,7 @@ class TaskTest extends TestCase
     public function test_task_update()
     {
         //Arrange
+        Sanctum::actingAs(User::factory()->create());
         $task = Task::factory()->create();
         $taskFake = Task::factory()->make();
         //Act
@@ -51,6 +56,7 @@ class TaskTest extends TestCase
     public function test_task_show()
     {
         //Arrange
+        Sanctum::actingAs(User::factory()->create());
         $task = Task::factory()->create();        
         //Act
         $response = $this->json('GET',route('tasks.show',$task)); 
@@ -64,6 +70,7 @@ class TaskTest extends TestCase
     public function test_task_destroy()
     {
         //Arrange
+        Sanctum::actingAs(User::factory()->create());
         $task = Task::factory()->create();        
         //Act
         $response = $this->json('DELETE',route('tasks.destroy',$task));
