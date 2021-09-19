@@ -12,9 +12,22 @@ use Illuminate\Http\Request;
 class TaskController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Get a Task List
+     * 
+     * @OA\Get(
+     *     path="/tasks",
+     *     tags={"/tasks"},
+     *     summay="Display a listing of the resource,
+     *     description="get all tasks on database and paginate then"
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of tasks"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {"write:tasks", "read:tasks"}}
+     *     },     *     
+     * )
+     * @return TaskCollection
      */
     public function index()
     {
