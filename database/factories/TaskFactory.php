@@ -27,7 +27,7 @@ class TaskFactory extends Factory
             'name' => $this->faker->name,
             'description' => $this->faker->sentence,
             'expired_at' => $this->faker->date,
-            'user_id' => User::factory()
+            // 'user_id' => User::factory()
 
         ];
     }
